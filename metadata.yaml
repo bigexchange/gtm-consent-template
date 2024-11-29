@@ -1,5 +1,5 @@
 homepage: "https://bigid.com/"
 documentation: "https://bigid.com/"
 versions:
-  - sha: <pending>
+  - sha: 87de34d03da1182285cb1bd257615db2a61ba56b
     changeNotes: Initial release.
