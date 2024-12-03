@@ -1,5 +1,5 @@
 homepage: "https://bigid.com/"
-documentation: "https://bigid.com/"
+documentation: "https://bigid.com/cookie-consent/"
 versions:
-  - sha: 87de34d03da1182285cb1bd257615db2a61ba56b
+  - sha: 42391919244e21c75d50e918707d518294201043
     changeNotes: Initial release.
