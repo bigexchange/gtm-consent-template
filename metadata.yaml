@@ -1,5 +1,7 @@
 homepage: "https://bigid.com/"
 documentation: "https://bigid.com/cookie-consent/"
 versions:
+  - sha: 628ca11d5e90b5b199921b1fe9360fe18ec7369b
+    changeNotes: Developer ID added.
   - sha: 42391919244e21c75d50e918707d518294201043
     changeNotes: Initial release.
