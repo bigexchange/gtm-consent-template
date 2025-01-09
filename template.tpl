@@ -356,6 +356,7 @@ const urlPassthrough = !data.noUrlPassthrough && (!googleSettings || googleSetti
 gtagSet({
   ads_data_redaction: !googleSettings || googleSettings.others.ads_data_redaction,
   url_passthrough: urlPassthrough,
+  'developer_id.dMTI2NW': true,
 });
 
 /**
@@ -787,6 +788,10 @@ ___WEB_PERMISSIONS___
               {
                 "type": 1,
                 "string": "url_passthrough"
+              },
+              {
+                "type": 1,
+                "string": "developer_id.dMTI2NW"
               }
             ]
           }
