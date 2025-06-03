@@ -48,6 +48,13 @@ ___TEMPLATE_PARAMETERS___
     "help": "Log into your BigID account \u003e In the home section, you will find your cookies banner code \u003e Click on the \u0027Copy to clipboard\u0027 icon associated with your site \u003e Copy your SITE ID from the src attribute (e.g. src\u003d\"https://bigidcmp.cloud/banner.js?siteId\u003dYOUR_SITE_ID\")."
   },
   {
+    "type": "TEXT",
+    "name": "gpc",
+    "displayName": "Global Privacy Control",
+    "simpleValueType": true,
+    "help": "In other to use the Global Privacy Control setting within the startup process in GTM, create a custom Javascript variable with the value \"navigator.globalPrivacyControl\" and then use it here by clicking on the building block with the plus icon."
+  },
+  {
     "type": "CHECKBOX",
     "name": "iabStub",
     "checkboxText": "Implement IAB TCF stub method",
@@ -328,9 +335,11 @@ const buildRegions = (userConfigs, builtInConfigs) => {
   return sorted;
 };
 
+const usBaseValue = data.gpc == 'true' ? 'denied' : 'granted';
+
 const baseRegions = [
   { region: ['US-VA', 'US-CO', 'US-IN'], value: 'denied' },
-  { region: ['US'], value: 'granted' },
+  { region: ['US'], value: usBaseValue },
   { value: 'denied' },
 ];
 
