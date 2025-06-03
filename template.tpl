@@ -52,7 +52,7 @@ ___TEMPLATE_PARAMETERS___
     "name": "gpc",
     "displayName": "Global Privacy Control",
     "simpleValueType": true,
-    "help": "In other to use the Global Privacy Control setting within the startup process in GTM, create a custom Javascript variable with the value \"navigator.globalPrivacyControl\" and then use it here by clicking on the building block with the plus icon."
+    "help": "In other to use the Global Privacy Control setting within the startup process in GTM, create a user-defined Javascript variable with the value \"navigator.globalPrivacyControl\" and then use it here by clicking on the building block with the plus icon."
   },
   {
     "type": "CHECKBOX",
