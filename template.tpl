@@ -335,7 +335,7 @@ const buildRegions = (userConfigs, builtInConfigs) => {
   return sorted;
 };
 
-const usBaseValue = data.gpc == 'true' ? 'denied' : 'granted';
+const usBaseValue = (data.gpc === 'true' || data.gpc === true) ? 'denied' : 'granted';
 
 const baseRegions = [
   { region: ['US-VA', 'US-CO', 'US-IN'], value: 'denied' },
