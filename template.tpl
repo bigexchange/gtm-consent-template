@@ -35,17 +35,24 @@ ___TEMPLATE_PARAMETERS___
 [
   {
     "type": "TEXT",
-    "name": "bannerCode",
-    "displayName": "SITE ID",
+    "name": "src",
+    "displayName": "Banner Source",
     "simpleValueType": true,
+    "alwaysInSummary": true,
+    "notSetText": "This field is required.",
+    "help": "Log into your BigID account. Head over to the Integration Center in the Overview screen of your domain. Open \"Tag Manager\" and copy your Banner Source (e.g. \"https://bigidcmp.cloud/banner.js?siteId\u003dYOUR_SITE_ID\").",
     "valueValidators": [
+      {
+        "type": "REGEX",
+        "args": [
+          "https:\\/\\/.*bigidcmp.cloud\\/banner.js\\?siteId\u003d[a-f0-9-]+"
+        ]
+      },
       {
         "type": "NON_EMPTY"
       }
     ],
-    "valueHint": "Your SITE ID",
-    "notSetText": "This field is required.",
-    "help": "Log into your BigID account \u003e In the home section, you will find your cookies banner code \u003e Click on the \u0027Copy to clipboard\u0027 icon associated with your site \u003e Copy your SITE ID from the src attribute (e.g. src\u003d\"https://bigidcmp.cloud/banner.js?siteId\u003dYOUR_SITE_ID\")."
+    "valueHint": "https://bigidcmp.cloud/banner.js?siteId\u003d\u003cyour-site-id\u003e"
   },
   {
     "type": "TEXT",
@@ -241,6 +248,21 @@ ___TEMPLATE_PARAMETERS___
     ],
     "help": "For Google Consent Mode to work, initial/default values must be set. You can change them here, applying a different setting to each region or simply override the global one.",
     "newRowTitle": "New region"
+  },
+  {
+    "type": "TEXT",
+    "name": "bannerCode",
+    "displayName": "SITE ID [DEPRECATED]",
+    "simpleValueType": true,
+    "valueHint": "Your SITE ID",
+    "help": "Log into your BigID account. Head over to the Integration Center in the Overview screen of your domain. Open \"Tag Manager\" and copy your SITE ID.",
+    "enablingConditions": [
+      {
+        "paramName": "bannerCode",
+        "paramValue": "",
+        "type": "PRESENT"
+      }
+    ]
   }
 ]
 
@@ -254,9 +276,20 @@ const createQueue = require('createQueue');
 const injectScript = require('injectScript');
 const queryPermission = require('queryPermission');
 const setDefaultConsentState = require('setDefaultConsentState');
-const encodeUri = require('encodeUri');
+const parseUrl = require('parseUrl');
 const getCookieValues = require('getCookieValues');
 const Object = require('Object');
+
+const getParams = () => {
+  if (!data.src) {
+    return ['https://bigidcmp.cloud/banner.js?siteId=' + data.bannerCode, data.bannerCode];
+  }
+  const srcUrl = parseUrl(data.src);
+  const siteId = srcUrl ? srcUrl.searchParams.siteId : '';
+  return [data.src, siteId];
+};
+const params = getParams();
+const src = params[0], siteId = params[1];
 
 const getBooleanOrUndefined = (v) => {
   if (typeof v === 'undefined') return undefined;
@@ -348,7 +381,7 @@ const regions = buildRegions(data.regionsDefaults, baseRegions);
 /**
  * Google Consent Mode
  */
-const cookieName = 'bigidcmp-consent-' + data.bannerCode;
+const cookieName = 'bigidcmp-consent-' + siteId;
 const consentStr = queryPermission('get_cookies', cookieName) ? getCookieValues(cookieName, true)[0] : undefined;
 const googleSettings = transformToGoogleSettings(consentStr);
 
@@ -383,7 +416,7 @@ if (data.iabStub) {
  */
 const noIab = !data.iabStub ? '&noIab=true' : '';
 const noUrlPassthrough = !urlPassthrough ? '&noUrlPassthrough=true' : '';
-let scriptSrc = 'https://bigidcmp.cloud/banner.js?siteId=' + encodeUri(data.bannerCode) + noIab + noUrlPassthrough;
+let scriptSrc = src + noIab + noUrlPassthrough;
 if (!queryPermission('inject_script', scriptSrc))
    return data.gtmOnFailure();
 injectScript(scriptSrc, data.gtmOnSuccess, data.gtmOnFailure);
@@ -406,7 +439,7 @@ ___WEB_PERMISSIONS___
             "listItem": [
               {
                 "type": 1,
-                "string": "https://bigidcmp.cloud/banner.js?siteId\u003d*"
+                "string": "https://*.bigidcmp.cloud/banner.js?siteId\u003d*"
               }
             ]
           }
@@ -818,8 +851,20 @@ ___WEB_PERMISSIONS___
 ___TESTS___
 
 scenarios:
-- name: Quick Test
-  code: runCode();
+- name: With Banner Source
+  code: |-
+    runCode({
+      src: 'https://bigidcmp.cloud/banner.js?siteId=3f9b354e-e350-447f-ad46-ed5d6b2c55b4',
+      iabStub: true,
+      noUrlPassthrough: false
+    });
+- name: With Site ID
+  code: |-
+    runCode({
+      banerCode: '3f9b354e-e350-447f-ad46-ed5d6b2c55b4',
+      iabStub: true,
+      noUrlPassthrough: false
+    });
 setup: ''
 
 
