@@ -1,6 +1,8 @@
 homepage: "https://bigid.com/"
 documentation: "https://bigid.com/cookie-consent/"
 versions:
+  - sha: 41d50569363e9f0aa8e553b3b20bb9ad7c597922
+    changeNotes: Added support for multiple banner sources
   - sha: e25852b49cc0db056cb7698ae43e3cdfca8736fa
     changeNotes: GPC input evaluation fixed
   - sha: a9347c0dfe8aacc137893205bfd3ca891fccbaf1
